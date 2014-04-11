@@ -11,11 +11,11 @@ d:D,C,A
 INP
 
 class Person
-  attr_accessor :name, :hope, :ismale
+  attr_accessor :name, :hope, :is_male
   def initialize(data)
     @name, rank = data.split(':')
     @hope = rank.split(',')
-    @ismale= @name =~ /[A-Z]/ ? true : false
+    @is_male= @name =~ /[A-Z]/
   end
 end
 
@@ -45,7 +45,7 @@ module Calc
     people
     .combination(2)
     .select {|pair|
-      pair[0].ismale != pair[1].ismale
+      pair[0].is_male != pair[1].is_male
     }
     .map {|pair|
       Couple.new(pair[0], pair[1])
