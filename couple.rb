@@ -11,11 +11,11 @@ d:D,C,A
 INP
 
 class Person
-  attr_accessor :name, :hope, :is_male
+  attr_accessor :name, :hope, :ismale
   def initialize(data)
     @name, rank = data.split(':')
     @hope = rank.split(',')
-    @is_male= @name =~ /[A-Z]/
+    @ismale= @name =~ /[A-Z]/ ? true : false
   end
 end
 
@@ -28,7 +28,7 @@ class Couple
   end
 
   def calc(male, female)
-    (male.hope.include?(female.name) ? male.hope.index(female.name) : 99) +(female.hope.include?(male.name) ? female.hope.index(male.name) : 99)
+    point =(male.hope.include?(female.name) ? male.hope.index(female.name) : 99) +(female.hope.include?(male.name) ? female.hope.index(male.name) : 99)
   end
 
   def str()
@@ -44,22 +44,24 @@ module Calc
   def generate_couple(people)
     people
     .combination(2)
-    .select {|one, another|
-      one.is_male != another.is_male
+    .select {|pair|
+      pair[0].ismale != pair[1].ismale
     }
-    .map {|one, another|
-      Couple.new(one, another)
+    .map {|pair|
+      Couple.new(pair[0], pair[1])
     }
   end
 
   def pick(member)
     proc {|sorted|
-      sorted.each_with_object([]) {|couple, acc|
+      match = []
+      sorted.each {|couple|
         if member.include?(couple.male.name) and member.include?(couple.female.name)
-          acc << couple
-          member = (member - [couple.male.name, couple.female.name]) #todo
+          match << couple
+          member = (member - [couple.male.name, couple.female.name])
         end
       }
+      match 
     }
   end
 
