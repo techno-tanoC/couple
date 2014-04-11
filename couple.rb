@@ -40,8 +40,12 @@ class Couple
       @point
     end
   end
+  
+  def str
+    "#{@male.name}-#{@female.name}"
+  end
 
-  def str()
+  def str_debug
     "#{@male.name}-#{@female.name}:#{point}"
   end
 
@@ -72,7 +76,7 @@ class Calc
       sorted.each_with_object([]) {|couple, acc|
         if member.include?(couple.male.name) and member.include?(couple.female.name)
           acc << couple
-          member = (member - [couple.male.name, couple.female.name]) #todo
+          member = (member - [couple.male.name, couple.female.name])
         end
       }
     }
@@ -84,7 +88,7 @@ picker = Calc.pick(people.map(&:name))
 couples = Calc.generate_couple(people)
 sorted = couples.sort
 
-ans = picker.(sorted)
+ans = picker.(sorted).sort_by {|v| v.male.name }
 ans.each {|c|
   puts c.str
 }
