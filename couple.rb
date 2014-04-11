@@ -36,12 +36,12 @@ class Couple
   end
 end
 
-module Calc 
-  def parse(input_data)
+class Calc 
+  def self.parse(input_data)
     input_data.split("\n").map(&Person.method(:new))
   end
 
-  def generate_couple(people)
+  def self.generate_couple(people)
     people
     .combination(2)
     .select {|one, another|
@@ -52,7 +52,7 @@ module Calc
     }
   end
 
-  def pick(member)
+  def self.pick(member)
     proc {|sorted|
       sorted.each_with_object([]) {|couple, acc|
         if member.include?(couple.male.name) and member.include?(couple.female.name)
@@ -63,7 +63,7 @@ module Calc
     }
   end
 
-  module_function :parse, :generate_couple, :pick
+#  module_function :parse, :generate_couple, :pick
 end
 
 people = Calc.parse(inp)
