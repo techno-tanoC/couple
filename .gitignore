@@ -1,1 +1,3 @@
 *.rb~
+*.swp
+.gitignore~
