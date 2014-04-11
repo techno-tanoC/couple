@@ -28,7 +28,7 @@ class Couple
   end
 
   def calc(male, female)
-    point =(male.hope.include?(female.name) ? male.hope.index(female.name) : 99) +(female.hope.include?(male.name) ? female.hope.index(male.name) : 99)
+    (male.hope.include?(female.name) ? male.hope.index(female.name) : 99) +(female.hope.include?(male.name) ? female.hope.index(male.name) : 99)
   end
 
   def str()
@@ -44,24 +44,22 @@ module Calc
   def generate_couple(people)
     people
     .combination(2)
-    .select {|pair|
-      pair[0].is_male != pair[1].is_male
+    .select {|one, another|
+      one.is_male != another.is_male
     }
-    .map {|pair|
-      Couple.new(pair[0], pair[1])
+    .map {|one, another|
+      Couple.new(one, another)
     }
   end
 
   def pick(member)
     proc {|sorted|
-      match = []
-      sorted.each {|couple|
+      sorted.each_with_object([]) {|couple, acc|
         if member.include?(couple.male.name) and member.include?(couple.female.name)
-          match << couple
+          acc << couple
           member = (member - [couple.male.name, couple.female.name])
         end
       }
-      match 
     }
   end
 
