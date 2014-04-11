@@ -67,7 +67,7 @@ module Calc
 end
 
 people = Calc.parse(inp)
-picker = Calc.pick(people.map {|p| p.name})
+picker = Calc.pick(people.map(&:name))
 couples = Calc.generate_couple(people)
 sorted = couples.sort {|a, b| a.point <=> b.point }
 
