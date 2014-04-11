@@ -11,28 +11,42 @@ d:D,C,A
 INP
 
 class Person
-  attr_accessor :name, :hope, :is_male
+  attr_accessor :name, :hope
   def initialize(data)
     @name, rank = data.split(':')
     @hope = rank.split(',')
-    @is_male= @name =~ /[A-Z]/
+  end
+
+  def male?
+    if @is_male.nil?
+      @is_male = @name =~ /[A-Z]/
+    else
+      @is_male
+    end
   end
 end
 
 class Couple
-  attr_accessor :point, :male, :female
+  attr_accessor :male, :female
   def initialize(m, f)
-    @point = calc(m, f)
     @male = m
     @female = f
   end
 
-  def calc(male, female)
-    (male.hope.include?(female.name) ? male.hope.index(female.name) : 99) +(female.hope.include?(male.name) ? female.hope.index(male.name) : 99)
+  def point
+    if @point.nil?
+      @point = (@male.hope.include?(@female.name) ? @male.hope.index(@female.name) : 99) +(@female.hope.include?(@male.name) ? @female.hope.index(@male.name) : 99) #todo
+    else
+      @point
+    end
   end
 
   def str()
-    "#{@male.name}-#{@female.name}:#{@point}"
+    "#{@male.name}-#{@female.name}:#{point}"
+  end
+
+  def <=>(another)
+    self.point <=> another.point
   end
 end
 
@@ -45,31 +59,30 @@ class Calc
     people
     .combination(2)
     .select {|one, another|
-      one.is_male != another.is_male
+      one.male? != another.male?
     }
     .map {|one, another|
       Couple.new(one, another)
     }
   end
 
-  def self.pick(member)
+  def self.pick(member_real)
+    member = member_real
     proc {|sorted|
       sorted.each_with_object([]) {|couple, acc|
         if member.include?(couple.male.name) and member.include?(couple.female.name)
           acc << couple
-          member = (member - [couple.male.name, couple.female.name])
+          member = (member - [couple.male.name, couple.female.name]) #todo
         end
       }
     }
   end
-
-#  module_function :parse, :generate_couple, :pick
 end
 
 people = Calc.parse(inp)
 picker = Calc.pick(people.map(&:name))
 couples = Calc.generate_couple(people)
-sorted = couples.sort {|a, b| a.point <=> b.point }
+sorted = couples.sort
 
 ans = picker.(sorted)
 ans.each {|c|
