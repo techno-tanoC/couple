@@ -30,7 +30,11 @@ class Couple
   end
 
   def point
-    @point ||= (@male.hope.include?(@female.name) ? @male.hope.index(@female.name) : 99) + (@female.hope.include?(@male.name) ? @female.hope.index(@male.name) : 99) #todo
+    if @male.hope.include?(@female.name) and @female.hope.include?(@male.name)
+      @point ||= @male.hope.index(@female.name) + @female.hope.index(@male.name)
+    else
+      nil
+    end
   end
   
   def str
@@ -42,7 +46,13 @@ class Couple
   end
 
   def <=>(another)
-    self.point <=> another.point
+    if self.point.nil?
+      -1
+    elsif another.point.nil?
+      1
+    else
+      self.point <=> another.point
+    end
   end
 end
 
