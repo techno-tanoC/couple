@@ -18,11 +18,7 @@ class Person
   end
 
   def male?
-    if @is_male.nil?
-      @is_male = @name =~ /[A-Z]/
-    else
-      @is_male
-    end
+    @is_male ||= @name =~ /[A-Z]/
   end
 end
 
@@ -34,11 +30,7 @@ class Couple
   end
 
   def point
-    if @point.nil?
-      @point = (@male.hope.include?(@female.name) ? @male.hope.index(@female.name) : 99) +(@female.hope.include?(@male.name) ? @female.hope.index(@male.name) : 99) #todo
-    else
-      @point
-    end
+    @point ||= (@male.hope.include?(@female.name) ? @male.hope.index(@female.name) : 99) + (@female.hope.include?(@male.name) ? @female.hope.index(@male.name) : 99) #todo
   end
   
   def str
